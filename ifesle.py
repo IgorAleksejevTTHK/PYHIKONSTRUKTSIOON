@@ -1,3 +1,4 @@
+
 from random import *
 #näidis 1
 arv=randint(0,10)
@@ -153,3 +154,94 @@ def poes():
 
 #---------------------------------------
 # ulesanne 9
+
+def ruut():
+    side1 = float(input("Sisesta esimene külg: "))
+    side2 = float(input("Sisesta teine külg: "))
+    if side1 == side2:
+        print("Need küljed moodustavad ruudu.")
+    else:
+        print("Need küljed ei moodusta ruudu.")
+
+    #--------------------------------------- 
+    # ulesanne 10
+
+def matemaatika():
+    number1 = float(input("Sisesta esimene arv: "))
+    number2 = float(input("Sisesta teine arv: "))
+    operation = input("Sisesta tehe (+, -, *, /): ")
+    
+    if operation == '+':
+        result = number1 + number2
+    elif operation == '-':
+        result = number1 - number2
+    elif operation == '*':
+        result = number1 * number2
+    elif operation == '/':
+        if number2 != 0:
+            result = number1 / number2
+        else:
+            print("Nulliga jagamine on voimatu.")
+            return
+    else:
+        print("Tundmatu tehe.")
+        return
+    
+    print(f"Tulemus: {result}")
+
+    #--------------------------------------- 
+    # ulesanne 11
+
+    
+def juubel():
+   birth_year = int(input("Sisesta oma sunniaasta: "))
+   current_year = 2025  # Current year
+   age = current_year - birth_year
+    
+if age % 5 == 0:
+        print(f"Tegemist on juubeliga, vanus on {age} aastat.")
+else:
+        print(f"Ei ole juubel, vanus on {age} aastat.")
+
+     #---------------------------------------
+     # ulesanne 12
+
+def muuk():
+         price = float(input("Sisesta toote hind: "))
+    
+if price <= 10:
+        final_price = price * 0.9
+else:
+        final_price = price * 0.8
+    
+print(f"Toote loplik hind on {final_price} eurot.")
+
+     #---------------------------------------
+     # ulesanne 13
+
+def jalgpalli_meeskond():
+    gender = input("Sisesta oma sugu (mees/naine): ").lower()
+    
+    if gender == "mees":
+        age = int(input("Sisesta oma vanus: "))
+        if 16 <= age <= 18:
+            print("Sobid meeskonda.")
+        else:
+            print("Ei sobi meeskonda.")
+    elif gender == "naine":
+        print("Naissoost kandidaate ei küsita vanust.")
+    else:
+        print("Tundmatu sugu.")
+
+     #---------------------------------------
+     # ulesanne 14
+
+def busside_logistika():
+    people = int(input("Sisesta inimeste arv: "))
+    bus_capacity = int(input("Sisesta bussi kohtade arv: "))
+    
+    buses_needed = (people + bus_capacity - 1) // bus_capacity
+    last_bus_passengers = people % bus_capacity or bus_capacity
+    
+    print(f"Vaja on {buses_needed} bussi.")
+    print(f"Viimases bussis on {last_bus_passengers} inimest.")
