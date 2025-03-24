@@ -1,38 +1,50 @@
 import random
 import string
 
-
 logins = []
 passwords = []
 
+def check_password(password):
+    """
+    Проверяет, соответствует ли пароль требованиям безопасности.
 
-def checkpassword(password):
-    val1 = list(".,:;!_*-+()/#¤%&")
-    val2 = list("0123456789")
-    val3 = list('qwertyuiopasdfghjklzxcvbnm')
-    val4 = list('QWERTYUIOPASDFGHJKLZXCVBNM')
+    Требования:
+    - Содержит хотя бы один символ из набора специального символа.
+    - Содержит хотя бы одну цифру.
+    - Содержит хотя бы одну строчную букву.
+    - Содержит хотя бы одну заглавную букву.
 
-    has_symbols = False
-    has_digits = False
-    has_lowercase = False
-    has_uppercase = False
+    Args:
+        password (str): Пароль, который нужно проверить.
 
-    for char in password:
-        if char in val1:
-            has_symbols = True
-        if char in val2:
-            has_digits = True
-        if char in val3:
-            has_lowercase = True
-        if char in val4:
-            has_uppercase = True
+    Returns:
+        bool: True, если пароль соответствует требованиям, иначе False.
+    """
+    symbols = ".,:;!_*-+()/#¤%&"
+    digits = "0123456789"
+    lowercase = 'qwertyuiopasdfghjklzxcvbnm'
+    uppercase = 'QWERTYUIOPASDFGHJKLZXCVBNM'
 
-        if has_symbols and has_digits and has_lowercase and has_uppercase:
-            return True
-    return False
-
+    return (any(char in symbols for char in password) and
+            any(char in digits for char in password) and
+            any(char in lowercase for char in password) and
+            any(char in uppercase for char in password))
 
 def register_user(logins, passwords):
+    """
+    Регистрирует нового пользователя и сохраняет его имя и пароль.
+
+    Процесс:
+    - Пользователь вводит имя и выбирает, создавать ли пароль автоматически.
+    - Пароль проверяется на соответствие требованиям безопасности.
+
+    Args:
+        logins (list): Список зарегистрированных имён пользователей.
+        passwords (list): Список зарегистрированных паролей.
+
+    Returns:
+        None
+    """
     print("\nРегистрация пользователя")
     username = input("Введите имя пользователя: ")
 
@@ -42,11 +54,11 @@ def register_user(logins, passwords):
 
     choice = input("Создать пароль автоматически? да/нет: ").lower()
     if choice == "да":
-        password = ''.join([random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(9)])
+        password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=9))
         print(f"Ваш пароль: {password}")
     else:
         password = input("Введите пароль: ")
-        if not checkpassword(password):
+        if not check_password(password):
             print("Пароль не соответствует норме.")
             return
 
@@ -54,8 +66,21 @@ def register_user(logins, passwords):
     passwords.append(password)
     print("Регистрация прошла успешно!")
 
-
 def authorize_user(logins, passwords):
+    """
+    Авторизует пользователя, проверяя его имя и пароль.
+
+    Процесс:
+    - Пользователь вводит имя и пароль.
+    - Проверяются совпадения имени и пароля.
+
+    Args:
+        logins (list): Список зарегистрированных имён пользователей.
+        passwords (list): Список зарегистрированных паролей.
+
+    Returns:
+        None
+    """
     print("\nАвторизация пользователя")
     username = input("Введите имя пользователя: ")
     password = input("Введите пароль: ")
@@ -69,26 +94,48 @@ def authorize_user(logins, passwords):
         return
     print("Пользователь не найден!")
 
-
 def change_password(logins, passwords):
+    """
+    Изменяет пароль для зарегистрированного пользователя.
+
+    Процесс:
+    - Пользователь вводит имя и новый пароль.
+    - Проверяется, соответствует ли новый пароль требованиям безопасности.
+
+    Args:
+        logins (list): Список зарегистрированных имён пользователей.
+        passwords (list): Список зарегистрированных паролей.
+
+    Returns:
+        None
+    """
     print("\nСмена пароля")
     username = input("Введите имя пользователя: ")
-   
 
     if username in logins:
         index = logins.index(username)
-        
         new_password = input("Введите новый пароль: ")
-        if checkpassword(new_password):
-                passwords[index] = new_password
-                print("Пароль успешно изменён!")
-                return
-        print("Новый пароль не соответствует норме.")
-        return
-    print("Пользователь не найден!")
-
+        if check_password(new_password):
+            passwords[index] = new_password
+            print("Пароль успешно изменён!")
+        else:
+            print("Новый пароль не соответствует норме.")
+    else:
+        print("Пользователь не найден!")
 
 def main_menu():
+    """
+    Основное меню программы.
+
+    Пользователь может выбрать одно из действий:
+    1. Регистрация.
+    2. Авторизация.
+    3. Смена пароля.
+    4. Выход из программы.
+
+    Returns:
+        None
+    """
     while True:
         print("\nМеню:")
         print("1. Регистрация")
@@ -96,7 +143,7 @@ def main_menu():
         print("3. Смена пароля")
         print("4. Выход")
 
-        choice = input("Выберите действие: ")
+        choice = input("Выберите действие: ").strip()
 
         if choice == "1":
             register_user(logins, passwords)
@@ -110,6 +157,5 @@ def main_menu():
         else:
             print("Неверный выбор, попробуйте снова.")
 
-
-
+# Запуск программы
 main_menu()
