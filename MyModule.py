@@ -1,149 +1,112 @@
 import random
 import string
 
-logins = []
-passwords = []
+logins = []  # Список для хранения имен пользователей / Kasutajate nimede loend
+passwords = []  # Список для хранения паролей / Paroolide loend
 
-def check_password(password):
-    """
-    Проверяет, соответствует ли пароль требованиям безопасности.
+def checkpassword(password):
+    """Проверяет, соответствует ли пароль требованиям безопасности.
+    Kontrollib, kas parool vastab turvanõuetele."""
+    val1 = list(".,:;!_*-+()/#¤%&")  # Список символов / Sümbolite loend
+    val2 = list("0123456789")  # Список цифр / Numbrite loend
+    val3 = list('qwertyuiopasdfghjklzxcvbnm')  # Список строчных букв / Väiketähtede loend
+    val4 = list('QWERTYUIOPASDFGHJKLZXCVBNM')  # Список заглавных букв / Suurtähtede loend
 
-    Требования:
-    - Содержит хотя бы один символ из набора специального символа.
-    - Содержит хотя бы одну цифру.
-    - Содержит хотя бы одну строчную букву.
-    - Содержит хотя бы одну заглавную букву.
+    # Флаги для проверки наличия различных типов символов в пароле / Lipud parooli tüüpide kontrollimiseks
+    has_symbols = False
+    has_digits = False
+    has_lowercase = False
+    has_uppercase = False
 
-    Args:
-        password (str): Пароль, который нужно проверить.
+    for char in password:
+        if char in val1:  # Если символ есть в списке специальных символов / Kas sümbol on spetsiaalsete sümbolite loendis
+            has_symbols = True
+        if char in val2:  # Если символ есть в списке цифр / Kas sümbol on numbrite loendis
+            has_digits = True
+        if char in val3:  # Если символ есть в списке строчных букв / Kas sümbol on väiketähtede loendis
+            has_lowercase = True
+        if char in val4:  # Если символ есть в списке заглавных букв / Kas sümbol on suurtähtede loendis
+            has_uppercase = True
 
-    Returns:
-        bool: True, если пароль соответствует требованиям, иначе False.
-    """
-    symbols = ".,:;!_*-+()/#¤%&"
-    digits = "0123456789"
-    lowercase = 'qwertyuiopasdfghjklzxcvbnm'
-    uppercase = 'QWERTYUIOPASDFGHJKLZXCVBNM'
-
-    return (any(char in symbols for char in password) and
-            any(char in digits for char in password) and
-            any(char in lowercase for char in password) and
-            any(char in uppercase for char in password))
+        # Если все условия выполнены, возвращаем True / Kui kõik tingimused on täidetud, tagastatakse True
+        if has_symbols and has_digits and has_lowercase and has_uppercase:
+            return True
+    return False  # Если одно из условий не выполнено, возвращаем False / Kui üks tingimus pole täidetud, tagastatakse False
 
 def register_user(logins, passwords):
-    """
-    Регистрирует нового пользователя и сохраняет его имя и пароль.
+    """Регистрация пользователей.
+    Kasutajade registratsioon."""
+    print("\nKasutajade registratsioon")
+    username = input("Sisestage kasutaja nimi: ")
 
-    Процесс:
-    - Пользователь вводит имя и выбирает, создавать ли пароль автоматически.
-    - Пароль проверяется на соответствие требованиям безопасности.
-
-    Args:
-        logins (list): Список зарегистрированных имён пользователей.
-        passwords (list): Список зарегистрированных паролей.
-
-    Returns:
-        None
-    """
-    print("\nРегистрация пользователя")
-    username = input("Введите имя пользователя: ")
-
+    # Проверяем, существует ли уже введенный логин / Kontrollime, kas sisestatud kasutajanimi on juba olemas
     if username in logins:
-        print("Имя пользователя занято.")
-        return
+        print("Kasutaja nimi on võetud.")  # Логин уже занят / Kasutajanimi on juba võetud
+        return  # Завершаем функцию / Funktsioon lõpetatakse
 
-    choice = input("Создать пароль автоматически? да/нет: ").lower()
-    if choice == "да":
-        password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=9))
-        print(f"Ваш пароль: {password}")
+    choice = input("Kas luua salasõna automaatselt? jah/ei: ").lower()
+    if choice == "jah":
+        # Генерация случайного пароля длиной 9 символов / Juhusliku 9-tähemärgilise parooli genereerimine
+        password = ''.join([random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(9)])
+        print(f"Teie parool: {password}")
     else:
-        password = input("Введите пароль: ")
-        if not check_password(password):
-            print("Пароль не соответствует норме.")
-            return
+        # Пользователь сам вводит пароль / Kasutaja sisestab parooli ise
+        password = input("Sisestage salasõna: ")
+        if not checkpassword(password):  # Проверяем, соответствует ли пароль требованиям / Kontrollime, kas parool vastab nõuetele
+            print("Salasõna ei ole õige.")  # Пароль не прошел проверку / Parool ei vasta nõuetele
+            return  # Завершаем функцию / Funktsioon lõpetatakse
 
+    # Добавляем логин и пароль в соответствующие списки / Lisame kasutajanime ja parooli vastavatesse loenditesse
     logins.append(username)
     passwords.append(password)
-    print("Регистрация прошла успешно!")
+    print("Registreerimine õnnestus!")  # Успешная регистрация / Registreerimine õnnestus
 
 def authorize_user(logins, passwords):
-    """
-    Авторизует пользователя, проверяя его имя и пароль.
+    """Авторизация пользователя.
+    Kasutaja autoriseerimine."""
+    print("\nKasutaja autoriseerimine")
+    username = input("Sisestage kasutaja nimi: ")
+    password = input("Sisestage salasõna: ")
 
-    Процесс:
-    - Пользователь вводит имя и пароль.
-    - Проверяются совпадения имени и пароля.
-
-    Args:
-        logins (list): Список зарегистрированных имён пользователей.
-        passwords (list): Список зарегистрированных паролей.
-
-    Returns:
-        None
-    """
-    print("\nАвторизация пользователя")
-    username = input("Введите имя пользователя: ")
-    password = input("Введите пароль: ")
-
+    # Проверяем, есть ли пользователь в списке логинов / Kontrollime, kas kasutajanimi on loendis
     if username in logins:
-        index = logins.index(username)
-        if passwords[index] == password:
-            print("Авторизация успешна!")
-            return
-        print("Неверный пароль!")
-        return
-    print("Пользователь не найден!")
+        index = logins.index(username)  # Получаем индекс логина в списке / Saame kasutajanime indeksi loendis
+        if passwords[index] == password:  # Проверяем, соответствует ли пароль / Kontrollime, kas parool klapib
+            print("Autoriseerimine õnnestus!")  # Успешная авторизация / Autoriseerimine õnnestus
+            return  # Завершаем функцию / Funktsioon lõpetatakse
+        print("Vale salasõna!")  # Неверный пароль / Vale parool
+        return  # Завершаем функцию / Funktsioon lõpetatakse
+    print("Kasutaja ei leitud!")  # Пользователь не найден / Kasutajat ei leitud
 
 def change_password(logins, passwords):
-    """
-    Изменяет пароль для зарегистрированного пользователя.
+    """Изменение пароля пользователя.
+    Kasutaja parooli muutmine."""
+    print("\nSalasõna muutmine")
+    username = input("Sisestage kasutajanimi: ")
 
-    Процесс:
-    - Пользователь вводит имя и новый пароль.
-    - Проверяется, соответствует ли новый пароль требованиям безопасности.
-
-    Args:
-        logins (list): Список зарегистрированных имён пользователей.
-        passwords (list): Список зарегистрированных паролей.
-
-    Returns:
-        None
-    """
-    print("\nСмена пароля")
-    username = input("Введите имя пользователя: ")
-
+    # Проверяем, есть ли пользователь в списке логинов / Kontrollime, kas kasutajanimi on loendis
     if username in logins:
-        index = logins.index(username)
-        new_password = input("Введите новый пароль: ")
-        if check_password(new_password):
-            passwords[index] = new_password
-            print("Пароль успешно изменён!")
-        else:
-            print("Новый пароль не соответствует норме.")
-    else:
-        print("Пользователь не найден!")
+        index = logins.index(username)  # Получаем индекс логина / Saame kasutajanime indeksi
+        new_password = input("Sisestage uue salasõna: ")
+        if checkpassword(new_password):  # Проверяем, соответствует ли новый пароль требованиям / Kontrollime uue parooli nõuetele vastavust
+            passwords[index] = new_password  # Обновляем пароль в списке / Uuendame parooli loendis
+            print("Parooli muutmine õnnestus!")  # Успешное изменение пароля / Parooli muutmine õnnestus
+            return  # Завершаем функцию / Funktsioon lõpetatakse
+        print("Uus parool ei ole õige.")  # Новый пароль не прошел проверку / Uus parool ei vasta nõuetele
+        return  # Завершаем функцию / Funktsioon lõpetatakse
+    print("Kasutaja ei leitud!")  # Пользователь не найден / Kasutajat ei leitud
 
 def main_menu():
-    """
-    Основное меню программы.
-
-    Пользователь может выбрать одно из действий:
-    1. Регистрация.
-    2. Авторизация.
-    3. Смена пароля.
-    4. Выход из программы.
-
-    Returns:
-        None
-    """
+    """Главное меню программы.
+    Programmi peamenüü."""
     while True:
-        print("\nМеню:")
-        print("1. Регистрация")
-        print("2. Авторизация")
-        print("3. Смена пароля")
-        print("4. Выход")
+        print("\nMenüü:")
+        print("1. Registreerimine")
+        print("2. Autoriseerimine")
+        print("3. Muuda parooli")
+        print("4. Välju")
 
-        choice = input("Выберите действие: ").strip()
+        choice = input("Valige toiming: ")
 
         if choice == "1":
             register_user(logins, passwords)
@@ -152,10 +115,9 @@ def main_menu():
         elif choice == "3":
             change_password(logins, passwords)
         elif choice == "4":
-            print("Выход из программы.")
-            break
+            print("Välju programmist.")  
+            break  
         else:
-            print("Неверный выбор, попробуйте снова.")
+            print("Vale valik, proovi uuesti.") 
 
-# Запуск программы
 main_menu()
