@@ -12,7 +12,7 @@ def checkpassword(password):
     val3 = list('qwertyuiopasdfghjklzxcvbnm')  # Список строчных букв / Väiketähtede loend
     val4 = list('QWERTYUIOPASDFGHJKLZXCVBNM')  # Список заглавных букв / Suurtähtede loend
 
-    # Флаги для проверки наличия различных типов символов в пароле / Lipud parooli tüüpide kontrollimiseks
+    # проверка наличия различных типов символов в пароле / Lipud parooli tüüpide kontrollimiseks
     has_symbols = False
     has_digits = False
     has_lowercase = False
