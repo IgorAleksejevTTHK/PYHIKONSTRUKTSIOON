@@ -1,0 +1,66 @@
+def linnad():
+    """Funktsioon linnade ja elanikega töötamiseks."""
+    linnad = []  
+    elanikud = []  
+
+    n = int(input("Sisestage linnade kogus: "))
+
+  
+    for i in range(n):
+        linn = input(f"Введите название города {i+1}: ")
+        linnad.append(linn)
+        elaniku_kokku = int(input(f"Sisestage elanike kogus {linn}: "))
+        elanikud.append(elaniku_kokku)
+
+
+    while True:
+        print("\nMenüü:")
+        print("1. Uurida, kui palju elanikke linnas on") 
+        print("2. Kuva linnad ja elanikkond tähestikulises järjekorras")  
+        print("3. Sisesta elanike arv ja leia lähima numbriga linn")  
+        print("4. Leidke linnad, mille elanike arv on väiksem kui määratud väärtus")  
+        print("5. Välja")  
+
+        valik = int(input("Sisestage arv 1-5: "))
+        
+        if valik == 1:
+            
+            nimi = input("Sisestage linna nimi: ")
+            if nimi in linnad:
+                index = linnad.index(nimi)  
+                print(f"Linnas {nimi} on {elanikud[index]} elanikku.")
+            else: 
+                print("Linn ei leitud.")  
+
+        elif valik == 2:
+
+            linnad_elanikuga = list(zip(linnad, elanikud))  
+            linnad_elanikuga.sort()  
+            for linn, elaniku_kokku in linnad_elanikuga:
+                print(f"{linn}: {elaniku_kokku} elanikku.")
+
+       
+        elif valik == 3:
+    
+            arv = int(input("Введите количество жителей: "))
+    
+    # Инициализируем переменные для хранения минимальной разницы и индекса города
+    minimaalne_vahe = None  # Здесь будет храниться минимальная разница
+    lähima_linna_indeks = -1
+    
+    # Проходим по всем городам и ищем наименьшую разницу
+    for i in range(len(города)):
+        erinevus = elanikud[i] - arv
+        
+        # Если минимальной разницы ещё нет или текущая разница меньше предыдущей
+        if minimaalne_vahe is None or (erinevus >= 0 and erinevus < minimaalne_vahe) or (erinevus < 0 and -erinevus < minimaalne_vahe):
+            minimaalne_vahe = erinevus if erinevus >= 0 else -erinevus
+            lähima_linna_indeks = i
+    
+    
+    print(f"Город с наиболее приближенным числом жителей: {linnad[lähima_linna_indeks]} ({elanikud[lähima_linna_indeks]} жителей).")
+
+
+        
+
+
