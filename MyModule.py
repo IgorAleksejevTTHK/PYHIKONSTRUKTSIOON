@@ -41,7 +41,7 @@ def register_user(logins, passwords):
 
     # Проверяем, существует ли уже введенный логин / Kontrollime, kas sisestatud kasutajanimi on juba olemas
     if username in logins:
-        print("Kasutaja nimi on võetud.")  # Логин уже занят / Kasutajanimi on juba võetud
+        print("Kasutaja nimi on võetud.")  
         return  # Завершаем функцию / Funktsioon lõpetatakse
 
     choice = input("Kas luua salasõna automaatselt? jah/ei: ").lower()
@@ -50,16 +50,16 @@ def register_user(logins, passwords):
         password = ''.join([random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(9)])
         print(f"Teie parool: {password}")
     else:
-        # Пользователь сам вводит пароль / Kasutaja sisestab parooli ise
+        
         password = input("Sisestage salasõna: ")
         if not checkpassword(password):  # Проверяем, соответствует ли пароль требованиям / Kontrollime, kas parool vastab nõuetele
-            print("Salasõna ei ole õige.")  # Пароль не прошел проверку / Parool ei vasta nõuetele
-            return  # Завершаем функцию / Funktsioon lõpetatakse
+            print("Salasõna ei ole õige.")  
+            return 
 
     # Добавляем логин и пароль в соответствующие списки / Lisame kasutajanime ja parooli vastavatesse loenditesse
     logins.append(username)
     passwords.append(password)
-    print("Registreerimine õnnestus!")  # Успешная регистрация / Registreerimine õnnestus
+    print("Registreerimine õnnestus!") 
 
 def authorize_user(logins, passwords):
     """Авторизация пользователя.
@@ -68,15 +68,15 @@ def authorize_user(logins, passwords):
     username = input("Sisestage kasutaja nimi: ")
     password = input("Sisestage salasõna: ")
 
-    # Проверяем, есть ли пользователь в списке логинов / Kontrollime, kas kasutajanimi on loendis
+      # Проверяем, есть ли пользователь в списке логинов / Kontrollime, kas kasutajanimi on loendis
     if username in logins:
         index = logins.index(username)  # Получаем индекс логина в списке / Saame kasutajanime indeksi loendis
         if passwords[index] == password:  # Проверяем, соответствует ли пароль / Kontrollime, kas parool klapib
-            print("Autoriseerimine õnnestus!")  # Успешная авторизация / Autoriseerimine õnnestus
-            return  # Завершаем функцию / Funktsioon lõpetatakse
-        print("Vale salasõna!")  # Неверный пароль / Vale parool
-        return  # Завершаем функцию / Funktsioon lõpetatakse
-    print("Kasutaja ei leitud!")  # Пользователь не найден / Kasutajat ei leitud
+            print("Autoriseerimine õnnestus!")  
+            return  
+        print("Vale salasõna!")  
+        return  
+    print("Kasutaja ei leitud!")  
 
 def change_password(logins, passwords):
     """Изменение пароля пользователя.
@@ -84,17 +84,16 @@ def change_password(logins, passwords):
     print("\nSalasõna muutmine")
     username = input("Sisestage kasutajanimi: ")
 
-    # Проверяем, есть ли пользователь в списке логинов / Kontrollime, kas kasutajanimi on loendis
     if username in logins:
         index = logins.index(username)  # Получаем индекс логина / Saame kasutajanime indeksi
         new_password = input("Sisestage uue salasõna: ")
         if checkpassword(new_password):  # Проверяем, соответствует ли новый пароль требованиям / Kontrollime uue parooli nõuetele vastavust
             passwords[index] = new_password  # Обновляем пароль в списке / Uuendame parooli loendis
-            print("Parooli muutmine õnnestus!")  # Успешное изменение пароля / Parooli muutmine õnnestus
-            return  # Завершаем функцию / Funktsioon lõpetatakse
-        print("Uus parool ei ole õige.")  # Новый пароль не прошел проверку / Uus parool ei vasta nõuetele
-        return  # Завершаем функцию / Funktsioon lõpetatakse
-    print("Kasutaja ei leitud!")  # Пользователь не найден / Kasutajat ei leitud
+            print("Parooli muutmine õnnestus!")  
+            return  
+        print("Uus parool ei ole õige.") 
+        return  
+    print("Kasutaja ei leitud!")  
 
 def main_menu():
     """Главное меню программы.
