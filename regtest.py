@@ -1,15 +1,20 @@
 ﻿import MyModule
-logins = []
-passwords = []
+while True:
+        print("\nRegtest menüü:")
+        print("1. Registreerimine")  
+        print("2. Autoriseerimine")  
+        print("3. Välju")  
 
-# Регистрация нового пользователя
-message = register_user(logins, passwords)
-print(message)
+        choice = input("Valige toiming (1/2/3): ").strip()
 
-# Авторизация
-message = authorize_user(logins, passwords)
-print(message)
+        if choice == "1":
+            register_user(logins, passwords)
+        elif choice == "2":
+            authorize_user(logins, passwords)
+        elif choice == "3":
+            print("Nägemist!")
+            break
+        else:
+            print("Vale valik, proovi uuesti.")
 
-# Проверка списков после регистрации
-print("Список пользователей:", logins)
-print("пароль:", passwords)
+
