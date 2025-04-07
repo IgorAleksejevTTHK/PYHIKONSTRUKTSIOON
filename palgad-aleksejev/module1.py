@@ -1,4 +1,4 @@
-﻿  
+  
 p=[]
 i=[]
 
@@ -174,6 +174,24 @@ def top1(i: list, p: list, t: int):
     rikkamad = andmed[-t:]
 
     return vaeseimad, rikkamad
+
+def keskmine_palk(i: list, p: list):
+    if not i or not p or len(i) != len(p):
+        return "Vale andmed."
+
+    keskmine = sum(p) / len(p)
+    lähim_nimi = i[0]
+    lähim_palk = p[0]
+    väikseim_erisus = (keskmine - p[0]) if keskmine > p[0] else (p[0] - keskmine)
+
+    for nimi, palk in zip(i, p):
+        erisus = (keskmine - palk) if keskmine > palk else (palk - keskmine)
+        if erisus < väikseim_erisus:
+            lähim_nimi, lähim_palk = nimi, palk
+            väikseim_erisus = erisus
+
+    return f"Keskmine palk: {keskmine:.2f}, kõige lähedasem: {lähim_nimi} ({lähim_palk})"
+
 
 
  
