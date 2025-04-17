@@ -32,7 +32,7 @@ def save_data(logins, passwords, emails):
 def send_email_notification(email, subject, body):
     """Отправка уведомления на e-mail."""
     smtp_server = 'smtp.gmail.com'
-    smtp_port = 465
+    smtp_port = 587
     sender_email = "igoralekseje@gmail.com" 
     sender_password = "eeam jtoe otpf cxvz" 
 
