@@ -1,4 +1,4 @@
-﻿import random
+import random
 import smtplib
 from email.message import EmailMessage
 import ssl
@@ -113,3 +113,21 @@ def menuu():
             print("Vale valik. Proovi uuesti.")
 
 menuu()
+
+def saada_koondraport():
+   
+    raport_email = "igoralekseje@gmail.com"
+    subject = "Tänased küsimustiku tulemused"
+
+    body = "Tere!\n\nTänased küsimustiku tulemused:\n\n"
+
+    with open("koik.txt", "r", encoding="utf-8") as f:
+        body += f.read()
+
+    send_email_notification(raport_email, subject, body)
+    print("Koondraport saadetud tööandjale!")
+
+
+print("\nKõik testid on tehtud.")
+print("Tulemused saadetud e-posti aadressidele.")
+saada_koondraport()
