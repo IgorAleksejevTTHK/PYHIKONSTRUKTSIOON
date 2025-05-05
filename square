@@ -1,0 +1,79 @@
+import tkinter as tk
+from math import sqrt
+import matplotlib.pyplot as plt
+import numpy as np
+
+def lahenda():
+    try:
+        a = float(a_entry.get())
+        b = float(b_entry.get())
+        c = float(c_entry.get())
+    except ValueError:
+        tulemus.config(text="Sisesta arvud!", fg="red")
+        return
+    
+    if a == 0:
+        tulemus.config(text="a ei tohi olla 0", fg="red")
+        return
+
+    d = b**2 - 4*a*c
+    if d > 0:
+        x1 = round((-b + sqrt(d)) / (2*a), 2)
+        x2 = round((-b - sqrt(d)) / (2*a), 2)
+        tulemus.config(text=f"D={d}\nX1={x1}\nX2={x2}", fg="black")
+    elif d == 0:
+        x = round(-b / (2*a), 2)
+        tulemus.config(text=f"D={d}\nX={x}", fg="black")
+    else:
+        tulemus.config(text=f"D={d}\nLahend puudub", fg="black")
+
+def joonista():
+    try:
+        a = float(a_entry.get())
+        b = float(b_entry.get())
+        c = float(c_entry.get())
+    except ValueError:
+        tulemus.config(text="Sisesta arvud!", fg="red")
+        return
+
+    if a == 0:
+        tulemus.config(text="a ei tohi olla 0", fg="red")
+        return
+
+    x = np.linspace(-10, 10, 400)
+    y = a * x**2 + b * x + c
+    plt.plot(x, y, label="y = ax² + bx + c")
+    plt.axhline(0, color="black")
+    plt.axvline(0, color="black")
+    plt.title("Ruutvõrrandi graafik")
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+aken = tk.Tk()
+aken.title("Ruutvõrrandid")
+aken.geometry("500x300")
+
+tk.Label(aken, text="Ruutvõrrandi lahendamine", font=("Arial", 16)).pack()
+
+sisend = tk.Frame(aken)
+sisend.pack(pady=10)
+
+a_entry = tk.Entry(sisend, width=4)
+b_entry = tk.Entry(sisend, width=4)
+c_entry = tk.Entry(sisend, width=4)
+
+a_entry.grid(row=0, column=0)
+tk.Label(sisend, text="x² +").grid(row=0, column=1)
+b_entry.grid(row=0, column=2)
+tk.Label(sisend, text="x +").grid(row=0, column=3)
+c_entry.grid(row=0, column=4)
+tk.Label(sisend, text="= 0").grid(row=0, column=5)
+
+tk.Button(aken, text="Lahenda", command=lahenda).pack(pady=5)
+tk.Button(aken, text="Graafik", command=joonista).pack(pady=5)
+
+tulemus = tk.Label(aken, text="Lahendus", bg="yellow", width=30)
+tulemus.pack(pady=10)
+
+aken.mainloop()
