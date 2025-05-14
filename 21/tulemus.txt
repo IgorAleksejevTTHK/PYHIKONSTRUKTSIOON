@@ -1,5 +1,10 @@
-Mängija: 21 (10, Äss) / Arvuti: 24 (Äss, 5, 8) - Mängija (Arvuti ületas 21) | Panus: 1000 | Balanss: 2900
-Mängija: 22 (4, Kuningas, 8) / Arvuti: 20 (Kuningas, Kuningas) - Arvuti (Mängija ületas 21) | Panus: 2900 | Balanss: 0
-Mängija: 22 (4, Kuningas, 8) / Arvuti: 24 (2, 4, 8, Dama) - Arvuti (Mängija ületas 21) | Panus: 1000 | Balanss: -1000
-Mängija: 22 (4, Kuningas, 8) / Arvuti: 19 (9, Vajet) - Arvuti (Mängija ületas 21) | Panus: 1000 | Balanss: -2000
-Mängija: 22 (4, Kuningas, 8) / Arvuti: 21 (4, Dama, 7) - Arvuti (Mängija ületas 21) | Panus: 1000 | Balanss: -3000
+Mängija: 18 (8, Vajet) / Arvuti: 18 (10, 8) - Viik | Panus: 1000 | Balanss: 1000
+Mängija: 20 (6, 6, 8) / Arvuti: 19 (9, 10) - Mängija | Panus: 1000 | Balanss: 2900
+Mängija: 19 (4, 5, 10) / Arvuti: 18 (8, Kuningas) - Mängija | Panus: 1000 | Balanss: 4800
+Игрок: 16 (6, 9, Äss) / Компьютер: 18 (5, 3, Kuningas) - Компьютер | Ставка: 111 | Баланс: 889
+Игрок: 16 (6, 9, Äss) / Компьютер: 21 (5, 6, Kuningas) - Компьютер | Ставка: 111 | Баланс: 778
+Игрок: 16 (6, 9, Äss) / Компьютер: 20 (Kuningas, 2, 4, 2, 2) - Компьютер | Ставка: 111 | Баланс: 667
+Игрок: 0 () / Компьютер: 20 (Kuningas, Vajet) - Компьютер | Ставка: 0 | Баланс: 1000
+Игрок: 6 (6) / Компьютер: 16 (5, 2, 4, 5) - Компьютер | Ставка: 0 | Баланс: 1000
+Игрок: 0 () / Компьютер: 23 (7, 5, 5, 6) - Игрок (Компьютер перебрал 21) | Ставка: 0 | Баланс: 1000
+Игрок: 10 (10) / Компьютер: 23 (2, Äss, Kuningas) - Игрок (Компьютер перебрал 21) | Ставка: 0 | Баланс: 1000
