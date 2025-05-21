@@ -1,0 +1,4 @@
+silmad,nina,suu
+silmad,nina,suu
+suu
+naovorm:1,silmad:1,nina:1,suu:1
