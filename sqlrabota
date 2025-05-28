@@ -1,0 +1,243 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+import sqlite3
+
+# Создание таблиц
+def create_tables():
+    conn = sqlite3.connect('movies.db')
+    cursor = conn.cursor()
+
+    cursor.executescript("""
+    CREATE TABLE IF NOT EXISTS languages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT UNIQUE NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS countries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT UNIQUE NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS movies (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      director TEXT,
+      release_year INTEGER,
+      genre TEXT,
+      duration INTEGER,
+      rating REAL,
+      language_id INTEGER,
+      country_id INTEGER,
+      description TEXT,
+      FOREIGN KEY (language_id) REFERENCES languages(id),
+      FOREIGN KEY (country_id) REFERENCES countries(id)
+    );
+    """)
+
+    # для выпад. списка
+    cursor.executemany("INSERT OR IGNORE INTO languages (name) VALUES (?)", [("English",), ("French",), ("Estonian",), ("German",), ("Spanish",)])
+    cursor.executemany("INSERT OR IGNORE INTO countries (name) VALUES (?)", [("USA",), ("France",), ("Estonia",), ("Germany",), ("Spain",)])
+
+    conn.commit()
+    conn.close()
+
+def get_id(table, name):
+    conn = sqlite3.connect('movies.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT id FROM {table} WHERE name=?", (name,))
+    res = cursor.fetchone()
+    conn.close()
+    return res[0] if res else None
+
+def load_movies(search=None):
+    for item in tree.get_children():
+        tree.delete(item)
+    conn = sqlite3.connect('movies.db')
+    cursor = conn.cursor()
+
+    query = """
+    SELECT
+        id, title, director, release_year, genre, duration, rating,
+        (SELECT name FROM languages WHERE id = language_id) AS language,
+        (SELECT name FROM countries WHERE id = country_id) AS country,
+        description
+    FROM movies
+    """
+    params = ()
+    if search:
+        query += " WHERE title LIKE ?"
+        params = (f"%{search}%",)
+    cursor.execute(query, params)
+    rows = cursor.fetchall()
+    for row in rows:
+        tree.insert("", tk.END, values=row)
+    conn.close()
+
+def search_movies():
+    query = search_var.get().strip()
+    if query == "":
+        load_movies()
+    else:
+        load_movies(search=query)
+
+def open_form(movie_data=None):
+   
+    form = tk.Toplevel(root)
+    form.title("Uuenda filmi" if movie_data else "Lisa uus film")
+
+    labels = ["Pealkiri", "Režissöör", "Aasta", "Žanr", "Kestus", "Reiting", "Keel", "Riik", "Kirjeldus"]
+    entries = {}
+
+    def load_dropdown_values():
+        conn = sqlite3.connect('movies.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM languages")
+        languages = [row[0] for row in cursor.fetchall()]
+        cursor.execute("SELECT name FROM countries")
+        countries = [row[0] for row in cursor.fetchall()]
+        conn.close()
+        return languages, countries
+
+    languages, countries = load_dropdown_values()
+
+    for i, label in enumerate(labels):
+        tk.Label(form, text=label).grid(row=i, column=0, padx=10, pady=5, sticky='e')
+        if label == "Keel":
+            combo = ttk.Combobox(form, state="readonly", values=languages)
+            combo.grid(row=i, column=1, padx=10, pady=5)
+            entries[label] = combo
+        elif label == "Riik":
+            combo = ttk.Combobox(form, state="readonly", values=countries)
+            combo.grid(row=i, column=1, padx=10, pady=5)
+            entries[label] = combo
+        else:
+            entry = tk.Entry(form)
+            entry.grid(row=i, column=1, padx=10, pady=5)
+            entries[label] = entry
+
+ 
+    if movie_data:
+        entries["Pealkiri"].insert(0, movie_data[1])
+        entries["Režissöör"].insert(0, movie_data[2] if movie_data[2] else "")
+        entries["Aasta"].insert(0, movie_data[3] if movie_data[3] else "")
+        entries["Žanr"].insert(0, movie_data[4] if movie_data[4] else "")
+        entries["Kestus"].insert(0, movie_data[5] if movie_data[5] else "")
+        entries["Reiting"].insert(0, movie_data[6] if movie_data[6] else "")
+        entries["Keel"].set(movie_data[7] if movie_data[7] else "")
+        entries["Riik"].set(movie_data[8] if movie_data[8] else "")
+        entries["Kirjeldus"].insert(0, movie_data[9] if movie_data[9] else "")
+
+    def save():
+        title = entries["Pealkiri"].get().strip()
+        if not title:
+            messagebox.showerror("Viga", "Pealkiri on kohustuslik!")
+            return
+        director = entries["Režissöör"].get().strip()
+        release_year = entries["Aasta"].get().strip()
+        genre = entries["Žanr"].get().strip()
+        duration = entries["Kestus"].get().strip()
+        rating = entries["Reiting"].get().strip()
+        language = entries["Keel"].get().strip()
+        country = entries["Riik"].get().strip()
+        description = entries["Kirjeldus"].get().strip()
+
+        language_id = get_id("languages", language)
+        country_id = get_id("countries", country)
+
+        conn = sqlite3.connect('movies.db')
+        cursor = conn.cursor()
+
+        if movie_data:  
+            cursor.execute("""
+                UPDATE movies SET title=?, director=?, release_year=?, genre=?, duration=?, rating=?, language_id=?, country_id=?, description=?
+                WHERE id=?
+            """, (title, director, release_year or None, genre, duration or None, rating or None, language_id, country_id, description, movie_data[0]))
+        else:  
+            cursor.execute("""
+                INSERT INTO movies (title, director, release_year, genre, duration, rating, language_id, country_id, description)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (title, director, release_year or None, genre, duration or None, rating or None, language_id, country_id, description))
+
+        conn.commit()
+        conn.close()
+        load_movies()
+        form.destroy()
+
+    btn_text = "Uuenda" if movie_data else "Lisa"
+    btn_save = tk.Button(form, text=btn_text, command=save)
+    btn_save.grid(row=len(labels), column=0, columnspan=2, pady=10)
+
+def delete_selected():
+    selected = tree.selection()
+    if not selected:
+        messagebox.showerror("Viga", "Vali tabelist rida, mida kustutada!")
+        return
+    item = tree.item(selected[0])
+    movie_id = item['values'][0]
+
+    if messagebox.askyesno("Kinnita", "Kas oled kindel, et soovid kustutada valitud filmi?"):
+        conn = sqlite3.connect('movies.db')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM movies WHERE id = ?", (movie_id,))
+        conn.commit()
+        conn.close()
+        load_movies()
+
+def open_update():
+    selected = tree.selection()
+    if not selected:
+        messagebox.showerror("Viga", "Vali tabelist rida, mida uuendada!")
+        return
+    item = tree.item(selected[0])
+    data = item['values']
+    open_form(movie_data=data)
+
+
+
+root = tk.Tk()
+root.title("Filmi andmete haldamine")
+
+search_var = tk.StringVar()
+
+search_frame = tk.Frame(root)
+search_frame.pack(pady=5, fill=tk.X)
+
+tk.Label(search_frame, text="Otsi pealkirja:").pack(side=tk.LEFT, padx=5)
+search_entry = tk.Entry(search_frame, textvariable=search_var)
+search_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+search_entry.bind("<Return>", lambda e: search_movies())
+
+tk.Button(search_frame, text="Otsi", command=search_movies).pack(side=tk.LEFT, padx=5)
+tk.Button(search_frame, text="Näita kõik", command=lambda: load_movies()).pack(side=tk.LEFT, padx=5)
+
+btn_frame = tk.Frame(root)
+btn_frame.pack(pady=5)
+
+tk.Button(btn_frame, text="Lisa uus", command=open_form).pack(side=tk.LEFT, padx=5)
+tk.Button(btn_frame, text="Uuenda valitud", command=open_update).pack(side=tk.LEFT, padx=5)
+tk.Button(btn_frame, text="Kustuta valitud", command=delete_selected).pack(side=tk.LEFT, padx=5)
+
+columns = ("id", "title", "director", "year", "genre", "duration", "rating", "language", "country", "description")
+tree = ttk.Treeview(root, columns=columns, show="headings")
+
+tree.heading("id", text="ID")
+tree.column("id", width=30, anchor='center')
+tree.heading("title", text="Pealkiri")
+tree.heading("director", text="Režissöör")
+tree.heading("year", text="Aasta")
+tree.heading("genre", text="Žanr")
+tree.heading("duration", text="Kestus")
+tree.heading("rating", text="Reiting")
+tree.heading("language", text="Keel")
+tree.heading("country", text="Riik")
+tree.heading("description", text="Kirjeldus")
+
+for col in columns[1:]:
+    tree.column(col, width=100)
+
+tree.pack(fill=tk.BOTH, expand=True)
+
+create_tables()
+load_movies()
+
+root.mainloop()
